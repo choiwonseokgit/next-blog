@@ -3,8 +3,8 @@ import Link from "next/link";
 
 function Header() {
   return (
-    <nav className="border-b">
-      <div className="flex justify-between mx-10 px-52 py-5">
+    <nav className="flex justify-center">
+      <div className="flex justify-between max-w-[1200px] px-4 py-5 flex-1">
         <Button asChild variant="outline">
           <Link href="/">CWS[Blog]</Link>
         </Button>
