@@ -1,4 +1,4 @@
-function PostDetailPage() {
+async function PostDetailPage() {
   return <div></div>;
 }
 

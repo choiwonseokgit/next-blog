@@ -22,7 +22,7 @@ function PostCard({ post, className, ...props }: PostCardProps) {
       <li>
         <Card
           className={cn(
-            "w-full h-full shadow-md transition hover:shadow-xl",
+            "w-full h-full shadow-md transition hover:shadow-xl overflow-hidden",
             className
           )}
           {...props}
