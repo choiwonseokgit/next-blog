@@ -3,28 +3,29 @@ import CategoryItem from "./category-item";
 
 interface CategoryListProps {
   categories: Category[];
-  allCategoriesCnt: number;
-  selectdCategory?: string;
+  categoriesCnt: number;
+  selectedCategory?: string;
 }
 
 function CategoryList({
   categories,
-  allCategoriesCnt,
-  selectdCategory = "All",
+  categoriesCnt,
+  selectedCategory = "All",
 }: CategoryListProps) {
+  //console.log(selectedCategory);
   return (
     <ul className="flex gap-4 py-6">
       <CategoryItem
         name={"All"}
-        isSelected={selectdCategory === "All"}
+        isSelected={selectedCategory === "All"}
         href="/blog"
-        cnt={allCategoriesCnt}
+        cnt={categoriesCnt}
       />
       {categories.map((category) => (
         <CategoryItem
           key={category.name}
-          isSelected={selectdCategory === category.name}
-          href={`/blog/${category.name}`}
+          isSelected={selectedCategory === category.path}
+          href={`/blog/${category.path}`}
           {...category}
         />
       ))}

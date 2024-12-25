@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/layouts/header";
 import Footer from "@/layouts/footer";
+import ThemeProvider from "@/layouts/theme/provider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -15,10 +16,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className="flex min-h-screen flex-col" suppressHydrationWarning>
-        <Header />
-        <main>{children}</main>
-        <Footer />
+      <body
+        className="flex min-h-screen flex-col font-pretendard"
+        suppressHydrationWarning
+      >
+        <ThemeProvider>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

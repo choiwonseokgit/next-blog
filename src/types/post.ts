@@ -8,4 +8,7 @@ export interface PostMatter {
 export interface Post extends PostMatter {
   url: string;
   content: string;
+  category: string;
+  categoryName: string;
+  slug: string;
 }
