@@ -33,7 +33,7 @@ function PostCard({ post }: PostCardProps) {
                 {post.categoryName}
               </div>
               <div className="inline-block h-[10px] w-[1px] bg-gray-500 mx-2 opacity-20" />
-              <span className="text-gray-500 text-xs">{post.date}</span>
+              <span className="text-gray-500 text-xs">{post.dateStr}</span>
             </div>
             <CardTitle className="text-xl">{post.title}</CardTitle>
           </CardHeader>

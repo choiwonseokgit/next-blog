@@ -17,7 +17,7 @@ const PostDetailHeader = ({ postDetail }: PostDetailHeaderProps) => {
           {postDetail.categoryName}
         </Link>
         <div className="inline-block h-[14px] w-[1px] bg-gray-500 mx-2 opacity-20" />
-        <span className="text-gray-500">{postDetail.date}</span>
+        <span className="text-gray-500">{postDetail.dateStr}</span>
       </div>
     </header>
   );

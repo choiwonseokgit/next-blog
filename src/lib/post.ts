@@ -19,8 +19,6 @@ export const parsePost = async (filePath: string): Promise<Post> => {
   const postAbstract = parsePostAbstract(filePath);
   const postDetail = await parsePostDetail(filePath);
 
-  //console.log(postAbstract);
-
   return { ...postDetail, ...postAbstract };
 };
 
@@ -30,9 +28,9 @@ export const parsePostDetail = async (filePath: string) => {
   const file = fs.readFileSync(absolutePath, "utf8");
   const { data, content } = matter(file);
   const postMatter = data as PostMatter;
-  const date = format(postMatter.date, "yyyy.MM.dd", { locale: ko });
+  const dateStr = format(postMatter.date, "yyyy.MM.dd", { locale: ko });
 
-  return { ...postMatter, date, content };
+  return { ...postMatter, dateStr, content };
 };
 
 export const parsePostAbstract = (filePath: string) => {
@@ -42,10 +40,6 @@ export const parsePostAbstract = (filePath: string) => {
   const [category, slug] = [pathParts[2], pathParts[3]];
   const categoryName = makeCategoryName(category);
   const url = `/blog/${category}/${slug}`;
-  // console.log(category, slug);
-
-  console.log(url);
-  console.log(path.normalize(url));
 
   return { url, category, categoryName, slug };
 };
@@ -53,16 +47,20 @@ export const parsePostAbstract = (filePath: string) => {
 export const getAllPostPaths = (category?: string) => {
   const folder = (category && `**/${category}`) || "**";
   const postPaths: string[] = sync(`${folder}/**/*.mdx`);
-  console.log("postPaths", postPaths);
+
   return postPaths;
 };
 
 // 모든 포스트 목록 조회
 export const getPostList = async (category?: string): Promise<Post[]> => {
   const paths: string[] = getAllPostPaths(category);
-  //console.log(paths);
   const posts = await Promise.all(paths.map((postPath) => parsePost(postPath)));
-  return posts;
+
+  return sortPostList(posts);
+};
+
+const sortPostList = (posts: Post[]) => {
+  return posts.sort((a, b) => b.date.getTime() - a.date.getTime());
 };
 
 // 모든 카테고리 목록 조회
