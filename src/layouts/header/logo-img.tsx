@@ -16,7 +16,9 @@ const LogoImg = () => {
     <>
       {mounted && (
         <Image
-          src={theme === "dark" ? "/cws_blog_4_dark.png" : "/cws_blog_4.png"}
+          src={
+            theme === "dark" ? "/cws_blog_logo_dark.png" : "/cws_blog_logo.png"
+          }
           alt="logo"
           fill
         />

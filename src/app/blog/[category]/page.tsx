@@ -1,25 +1,47 @@
 import PostListPage from "@/components/post-list-page";
-import { getCategoryList } from "@/lib/post";
+import { blogTitle } from "@/config/const";
+import { getCategoryList, makeCategoryName } from "@/lib/post";
+import { Metadata } from "next";
+
+interface Props {
+  params: {
+    category: string;
+  };
+}
 
 // 허용된 param 외 접근시 404
 export const dynamicParams = false;
 
 export async function generateStaticParams() {
   const categories = await getCategoryList();
-  // console.log(categories);
+
   return categories.map((category) => ({
     category,
   }));
 }
 
-interface CategoryPageProps {
-  params: {
-    category: string;
+export async function generateMetadata({
+  params: { category },
+}: Props): Promise<Metadata> {
+  const cg = makeCategoryName(category);
+  const title = `${cg} | ${blogTitle}`;
+  // const url = `${baseDomain}/${category}`;
+
+  return {
+    title,
+    openGraph: {
+      title,
+      // url,
+      // images: [blogThumbnailURL],
+    },
+    twitter: {
+      title,
+      // images: [blogThumbnailURL],
+    },
   };
 }
 
-async function CategoryPage({ params }: CategoryPageProps) {
-  // console.log(params);
+async function CategoryPage({ params }: Props) {
   return <PostListPage category={params.category} />;
 }
 

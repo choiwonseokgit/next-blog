@@ -1,6 +1,11 @@
 import PostDetailBody from "@/components/post-detail-body";
 import PostDetailHeader from "@/components/post-detail-header";
 import { getAllPostPaths, getPostDetail, parsePostAbstract } from "@/lib/post";
+import { Metadata } from "next";
+
+interface Props {
+  params: { category: string; slug: string };
+}
 
 export function generateStaticParams() {
   const allPostPaths = getAllPostPaths();
@@ -11,13 +16,35 @@ export function generateStaticParams() {
   return paramList;
 }
 
-interface PostDetailProps {
-  params: { category: string; slug: string };
+export async function generateMetadata({
+  params: { category, slug },
+}: Props): Promise<Metadata> {
+  const postDetail = await getPostDetail(category, slug);
+
+  const title = `${postDetail.title} | CWS BLOG`;
+  // const imageURL = `${baseDomain}${post.thumbnail}`;
+
+  return {
+    title,
+    description: postDetail.desc,
+
+    openGraph: {
+      title,
+      description: postDetail.desc,
+      type: "article",
+      publishedTime: postDetail.date.toISOString(),
+      // url: `${baseDomain}${post.url}`,
+      // images: [imageURL],
+    },
+    twitter: {
+      title,
+      description: postDetail.desc,
+      // images: [imageURL],
+    },
+  };
 }
 
-const PostDetailPage = async ({
-  params: { category, slug },
-}: PostDetailProps) => {
+const PostDetailPage = async ({ params: { category, slug } }: Props) => {
   // console.log(category, slug);
   const postDetail = await getPostDetail(category, slug);
   // console.log(postDetail);
