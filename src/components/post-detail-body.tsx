@@ -1,16 +1,25 @@
 import { Post } from "@/types/post";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import rehypePrettyCode from "rehype-pretty-code";
+import rehypePrettyCode, { type Options } from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
 import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
 // @ts-expect-error no types
 import remarkA11yEmoji from "@fec/remark-a11y-emoji";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import { MdxComponents } from "./mdx";
 
 interface PostDetailBodyProps {
   postDetail: Post;
 }
+
+const prettyCodeOptions: Options = {
+  keepBackground: true,
+  theme: {
+    dark: "slack-dark",
+    light: "slack-dark",
+  },
+};
 
 const PostDetailBody = ({ postDetail }: PostDetailBodyProps) => {
   return (
@@ -26,9 +35,14 @@ const PostDetailBody = ({ postDetail }: PostDetailBodyProps) => {
             // mdx 1줄 개행 지원
             remarkBreaks,
           ],
-          rehypePlugins: [rehypeSlug, rehypePrettyCode, rehypeAutolinkHeadings],
+          rehypePlugins: [
+            rehypeSlug,
+            [rehypePrettyCode, prettyCodeOptions],
+            rehypeAutolinkHeadings,
+          ],
         },
       }}
+      components={MdxComponents}
     />
   );
 };
