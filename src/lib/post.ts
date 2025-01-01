@@ -98,3 +98,11 @@ export const makeCategoryName = (category: string) => {
 
   return name;
 };
+
+export const makeThumbnailName = (thumbnail: string) => {
+  const name = thumbnail
+    .split("_")
+    .join(" ");
+
+  return name;
+};

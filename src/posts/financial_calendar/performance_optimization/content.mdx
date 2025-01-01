@@ -1,0 +1,235 @@
+---
+title: financial-calendar 성능 최적화(feat. 프론트엔드 성능 최적화 가이드)
+date: 2024-11-19
+desc: 성능 최적화 도전!
+thumbnail: /og?title=financial_calendar&desc=프론트_엔드_성능_최적화
+---
+
+> - [financial-calendar 깃허브](https://github.com/choiwonseokgit/financial-calendar) 
+> - [financial-calendar 링크](https://www.financial-calendar-cws.store/)
+
+## 📌 성능 최적화란?
+
+프론트엔드에서 성능 최적화란 웹 애플리케이션에서 UI와 로딩 속도를 개선하고 UX를 개선하기 위한 모든 작업들을 말합니다. 단순하게 사용자에게 페이지를 빠르게 보여주고 부드럽게 상호작용하며 필요한 정보를 빠르게 제공하는 것이 목표입니다.
+> 최적화된 웹 애플리케이션은 사용자가 사이트에서 긍정적인 경험을 느끼게 하여 가입률과 전환율을 높이고, 반대로 이탈률을 줄이는 데 기여합니다.
+
+## 📌 성능 최적화 개선 방법
+웹 성능을 결정하는 요소는 크게 로딩 성능과 렌더링 성능으로 나눌 수 있습니다.
+
+- **로딩 성능**
+  * 로딩 성능은 서버에 있는 웹 페이지와 웹 페이지에 필요한 기타 리소스를 다운로드할 때의 성능을 말합니다.
+  * 고화질 이미지나 HTML, JS, CSS 파일이 너무 크면 다운로드할 때 오래 걸려 사용자에 표시되는 웹 페이지가 느리게 표시될 것입니다.
+  * 로딩 성능을 개선하는 가장 좋은 방법은 리소스 수를 줄이거나 크기를 줄이는 것입니다.
+
+- **렌더링 성능**
+  * 렌더링 성능은 다운로드한 리소스를 가지고 화면을 그릴 때의 성능을 말합니다.
+  * 코드를 얼마나 효율적으로 작성했느냐에 따라 화면이 그려지는 속도와 사용자 인터렉션의 자연스러운 정도가 달라집니다.
+ 
+## 📌 Lighthouse란?
+- 구글에서 만든 툴로, 웹사이트의 성능을 측정하고 개선 방향을 제시해 주는 자동화 툴입니다.
+- Lighthouse를 이용하여 웹사이트의 성능 점수를 측정하고 개선 가이드를 확인함으로써 어떤 부분을 중점적으로 분석하고 최적화해야 하는지 알 수 있습니다.
+- 크롬에서 Lighthouse 패널을 통해 손쉽게 사용할 수 있습니다.
+
+![](/posts/financial_calendar/performance_optimization/financial_calendar_성능_최적화_1.png)
+
+검사를 하고 나면 이렇게 웹 페이지의 종합 성능 점수가 나옵니다. 이 점수는 아래에 보이는 여섯 가지 지표(metrics)에 가중치를 적용한 평균 점수입니다. 이러한 지표를 웹 바이탈(Web vitals)라고 부릅니다.
+  
+<details>
+  <summary>웹 바이탈(Web vitals) 종류</summary>
+
+  
+  
+- **First Contentful Paint(FCP)**
+  * 페이지가 로드될 때 브라우저가 DOM 콘텐츠의 첫 번째 부분을 렌더링하는데 걸리는 시간에 관한 지표입니다.
+  * 네이버는 첫 콘텐츠가 뜨기까지 0.6초가 걸렸음을 알 수 있습니다.
+  * FCP는 총점을 계산할 때, 10%의 가중치를 갖습니다.
+  
+- **Speed Index(SI)**
+  * 페이지 로드 중 콘텐츠가 시각적으로 표시되는 속도를 나타내는 지표입니다. 
+  * 예를 들어 A는 1초마다 콘텐츠가 4초동안 순차적으로 나오고, B는 4초때의 한 번에 나온다고 한다면, A가 B보다 더 빨리 로드된 것으로 계산되며, 더 높은 점수를 받습니다.
+  * SI는 총점을 계산할 때, 10%의 가중치를 갖습니다.
+
+- **Largest Contentful Paint(LCP)**
+  * 페이지가 로드될 때 화면 내에 있는 가장 큰 이미지나 텍스트 요소가 렌더링되기까지 걸리는 시간을 나타내는 지표입니다.
+  * 네이버는 페이지에 진입하여 가장 큰 콘텐츠가 뜨기까지 1.6초가 걸렸습니다.
+  * LCP는 총점을 계산할 때, 25%의 가중치를 갖습니다.
+
+- **Time to Interactive(TTI)**
+  * 사용자가 페이지와 상호 작용이 가능한 시점까지 걸리는 시간을 측정한 지표입니다.
+  * 상호작용이란 클릭 또는 키보드 누름 같은 사용자 입력을 의미합니다. 즉, 이 시점 전까지는 화면이 보이더라도 클릭 같은 입력이 동작하지 않습니다.
+  * TTI는 총점을 계산할 때, 10%의 가중치를 갖습니다.
+
+- **Total Blocking Time(TBT)**
+  * 페이지가 클릭, 키보드 입력 등의 사용자 입력에 응답하지 않도록 차단된 시간을 총합한 지표입니다.
+  * 측정은 FCP와 TTI 사이의 시간 동안 일어나며 메인 스레드를 독점하여 다른 동작을 방해하는 작업에 걸린 시간을 총합합니다.
+  * TBT는 총점을 계산할 때, 30%의 가중치를 갖습니다.
+
+- **Cumulative Layout Shift(CLS)**
+  * 페이지 로드 과정에서 발생하는 예기치 못한 레이아웃 이동을 측정한 지표입니다.
+  * 화면상에서 요소의 위치나 크기가 순간적으로 변하는 것을 말합니다.
+  * CLS는 총점을 계산할 때, 15%의 가중치를 갖습니다.
+</details>
+
+
+## 📌 Lighthouse 측정 결과(최적화 전)
+![](/posts/financial_calendar/performance_optimization/financial_calendar_성능_최적화_2.png)
+전반적으로 양호한 결과였습니다. 하지만 LCP 측면에서 확실히 성능이 저하되는 원인이 있다는 것을 알게 되었고 LCP를 중심으로 최적화를 진행해보겠습니다!
+
+## 📌 LCP 개선(폰트 최적화)
+**폰트 최적화**
+먼저 폰트를 최적화하여 성능을 개선하고자 합니다.
+![](/posts/financial_calendar/performance_optimization/financial_calendar_성능_최적화_2.5.png)
+
+제가 사용하고 있었던 Pretendard 폰트인데 둘다 woff 형식으로서 1.2MB, 1.1MB로 상당히 크기가 크고 시간도 조금 걸리는 것을 볼 수 있습니다. 최적화된 폰트를 사용한다면 크기가 줄고 요청 시간도 상당히 줄어들 것으로 보입니다.
+
+- **WOFF 2.0 형식의 폰트 적용**
+![](/posts/financial_calendar/performance_optimization/financial_calendar_성능_최적화_3.png)
+woff2 형식은 woff 형식보다 30%~50% 압축된 형식이며 모던 브라우저에서 대부분 지원하고 있습니다. 하지만 일부 브라우저에서 woff2 형식이 지원이 안 될시를 대비해 woff 형식이 적용되도록 구현하였습니다.
+
+- **subset 폰트 적용**
+Pretendard에서 거의 사용하지 않는 폰트를 제거한 폰트인 subset 폰트를 제공 하고 있어서 Pretendard-subset 폰트를 적용하였습니다.
+
+- **🚨 styled component에서 font적용시 주의할점**
+폰트 요청이 페이지 이동시마다 계속 요청되는 현상이 있었고 그것때문에 폰트가 계속 깜빡이는 현상이 보였습니다. 검색결과 styled component는 새로운 스타일이 렌더될 때마다 `<style>` 태그를 변경하면서 매번 폰트를 재요청하기 때문에 발생하는 문제라고 합니다. 보통 styled-components를 사용한다면 createGlobalStyle로 글로벌 스타일을 관리할텐데, 만약 여기에서 font-face로 폰트를 설정했다면 이러한 문제가 발생합니다. 그래서 이러한 문제는 styled-components 자체의 문제이므로 폰트 관련 css를 styled-components로부터 아예 분리해서 설정해야 합니다. ([참고링크](https://tesseractjh.tistory.com/182))
+
+```css
+//font.css 파일 생성 후 import
+@font-face {
+  font-family: 'Pretendard';
+  src:
+    local('Pretendard Thin'),
+    url(/src/assets/fonts/Pretendard-Thin.subset.woff2) format('woff2'),
+    url(/src/assets/fonts/Pretendard-Thin.subset.woff) format('woff');
+  font-weight: 100;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Pretendard';
+  src:
+    local('Pretendard Regular'),
+    url(/src/assets/fonts/Pretendard-Regular.subset.woff2) format('woff2'),
+    url(/src/assets/fonts/Pretendard-Regular.subset.woff) format('woff');
+  font-weight: 400;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Pretendard';
+  src:
+    local('Pretendard Bold'),
+    url(/src/assets/fonts/Pretendard-Bold.subset.woff2) format('woff2'),
+    url(/src/assets/fonts/Pretendard-Bold.subset.woff) format('woff');
+  font-weight: 700;
+  font-display: block;
+}
+```
+
+- **결과**
+font의 크기가 매우 최적화 된 것을 볼 수 있고 시간 또한 많이 줄어든 것을 확인할 수 있습니다. 
+![](/posts/financial_calendar/performance_optimization/financial_calendar_성능_최적화_4.png)
+> Pretendard-Bold:1.2MB -> 271.kb(210ms -> 127ms)
+Pretendard-Regular: 1.1MB -> 267kb(253ms -> 130ms)
+
+- **Data-URI 형식의 폰트 적용**
+![](/posts/financial_calendar/performance_optimization/financial_calendar_성능_최적화_5.png)
+추가로 제가 로그인, 로딩 페이지에서만 적용하던 New Amsterdam이란 폰트가 있었는데 이 부분도 성능에 영향을 줘서 최적화를 진행해보겠습니다.
+![](/posts/financial_calendar/performance_optimization/financial_calendar_성능_최적화_6.png)
+
+사실 이 페이지에서는 쓰이는 글자가 정해져 있기 때문에 제가 직접 사용하는 글자만을 추출 할 수 있는
+[transfonter 사이트](https://transfonter.org/)를 활용하여 subset 폰트를 생성 할 수 있었습니다. (폰트 파일을 원하는 형식으로 convert 후 download 하면 됩니다.)
+![](/posts/financial_calendar/performance_optimization/financial_calendar_성능_최적화_7.png)
+
+
+이렇게 subset 폰트를 추출 한후 이 폰트는 사실 굉장히 가벼운 크기 이기 때문에 Data-URI 형식으로 css 번들 파일에 포함시키는 방식을 적용해보았습니다. (이러한 방식을 적용하려면 base64 encode를 체크하고 convert를 하면 됩니다.) 이러한 방식은 추가 요청 없이 바로 폰트를 적용할 수 있다는 장점이 있습니다. 하지만 크기가 큰 폰트일시 base 64로 인코딩 하는 과정에서 파일의 크기가 커지고 번들 파일의 크기 또한 커지기 때문에 무조건 좋은 방법은 아닙니다. 빠른 로드가 필요한 경우 크기가 작은 폰트 파일일때 유용한 방법입니다. Pretendard 또한 이 페이지에서 몇 글자 쓰이기 때문에 subset 폰트를 추출하여 'Pretendard-login'으로 Data-URI로 같이 적용을 했습니다. 그 결과 font 변화(FOIT) 없이 로그인 페이지, 로딩 페이지에 폰트 적용을 할 수 있었습니다.
+
+```css
+@font-face {
+  font-family: 'Pretendard-login';
+  src:
+    url('data:font/woff2;charset=utf-8;base64,d09GMgABAA...')
+      format('woff2'),
+    url(/src/assets/fonts/subset-Pretendard-Regular-Login.woff) format('woff');
+  font-weight: 400;
+  font-display: block;
+}
+@font-face {
+  font-family: 'New Amsterdam';
+  src:
+    url('data:font/woff2;charset=utf-8;base64,d09GMgABA...')
+      format('woff2'),
+    url(/src/assets/fonts/subset-NewAmsterdam-Regular.woff) format('woff');
+  font-display: block;
+}
+
+```
+
+
+## 📌 SEO 개선
+**robotx.txt**
+간단하게 robots.txt 파일을 설정하여 SEO를 개선할 수 있었습니다. 저희 서비스는 모든 페이지에 대한 검색 엔진 크롤러의 접근을 허용하도록 설정하였습니다.
+```txt
+User-agent: *  
+Allow: /  
+```
+**메타 태그 설정**
+기존에 설정해 놓은 메타 태그입니다.
+```html
+<html>
+   ...
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="목표 금액을 설정하고 꾸준하게 기록해보세요!"
+    />
+    <!-- Open Graph 메타 태그 -->
+    <meta property="og:title" content="Financial-Calendar" />
+    <meta
+      property="og:description"
+      content="목표 금액을 설정하고 꾸준하게 기록해보세요!"
+    />
+    <meta
+      property="og:image"
+      content="%PUBLIC_URL%/financial-calendar-icon.svg"
+    />
+    <meta
+      property="og:url"
+      content="https://www.financial-calendar-cws.store/"
+    />
+  ...
+</html>
+```
+## 📌 접근성 개선
+![](/posts/financial_calendar/performance_optimization/financial_calendar_성능_최적화_8.png)
+접근성 점수가 89점으로 나왔는데 react-big-calendar의 일부 ARIA 하위 요소가 누락되었다고 나와 있었습니다. 검색을 해본 결과 ARIA 역할을 명시 했을때 해당 역할에 필요한 하위 요소를 포함하지 않아서 생기는 문제 같았습니다.
+
+**📚 ARIA(Accessible Rich Internet Applications)**는 웹 콘텐츠 및 웹 애플리케이션의 접근성을 향상시키기 위한 WAI (Web Accessibility Initiative) 표준입니다. 시각 장애인 등 다양한 사용자들이 스크린 리더와 같은 보조 기술을 사용해 웹 콘텐츠를 더 잘 이해하고 상호작용할 수 있도록 설계되었습니다.
+
+**📚 ARIA 역할 설명**
+- role="row": 이 역할은 테이블의 행을 나타냅니다. 이 역할은 div 요소에 적용되어야 하며, 그 안의 개별 셀들은 role="cell" 또는 role="columnheader"를 가질 수 있습니다.
+- role="columnheader": 이 역할은 테이블의 열 헤더를 나타냅니다. div 요소에 이 역할을 추가해 특정 열을 설명합니다.
+
+**📚 필수 하위 역할을 추가하는 이유**
+- ARIA 역할을 지정할 때, 특정 역할은 반드시 하위 요소들과 함께 사용되어야 제대로 된 접근성을 제공합니다. 예를 들어, role="row"는 반드시 role="cell" 또는 role="columnheader"와 같은 하위 요소들과 함께 사용해야 합니다. 그렇지 않으면 스크린 리더가 해당 요소의 의미를 정확하게 파악할 수 없기 때문에 접근성이 떨어지게 됩니다.
+
+```tsx {2}
+function MyMonthHeader({ label }: HeaderProps) {
+  return (
+    <S.Container $label={label} role="cell"> //role="cell"추가
+      {label}
+    </S.Container>
+  );
+}
+```
+그래서 문제가 생긴 하위 요소에 role="cell"을 추가하여 접근성을 개선할 수 있었습니다.
+
+## 📌 Lighthouse 측정 결과(최적화 후)
+![](/posts/financial_calendar/performance_optimization/financial_calendar_성능_최적화_9.png)
+이렇게 성공적으로 성능 최적화를 마칠 수 있었습니다! 확실히 사용하면서 애플리케이션이 최적화가 된게 느껴지네요!😊
+
+> - LCP 지표 2.9초 → 1.4초
+> - 접근성 점수 89점 → 96점 으로 약 8% 개선
+> - SEO 점수 92점 → 100점 으로 약 8% 개선
+> - 성능 점수 82점 → 96점 으로 약 17% 개선
+
+## 📌 자료 출처 
+[프론트엔드 성능 최적화 가이드](https://product.kyobobook.co.kr/detail/S000200178292)를 활용하여 학습하였습니다.

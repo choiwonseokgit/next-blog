@@ -1,0 +1,164 @@
+---
+title: financial-calendar 차트 적용기(chart.js)
+date: 2024-11-19
+desc: 지출 카테고리별 차트를 적용해보겠습니다.
+thumbnail: /og?title=financial_calendar&desc=차트 적용기
+---
+
+> - [financial-calendar 깃허브](https://github.com/choiwonseokgit/financial-calendar) 
+> - [financial-calendar 링크](https://www.financial-calendar-cws.store/)
+
+### 📌 차트 적용하기
+> 월별 지출, 연별 지출을 시각적으로 쉽게 하기 위해 차트를 적용하기로 했습니다. 차트 라이브러리중 유명한 chart.js의 리액트 버전인 `react-chartjs-2`를 도입하기로 하였습니다. 그 중에서도 도넛 차트를 이용할 것이며 깔끔하게 적용해보겠습니다.
+
+### 📌 설치
+`chart.js` 와 `react-chartjs-2` 설치해줍니다. 추가로 차트에서 각 데이터 항목의 라벨을 보여주려면 `chartjs-plugin-datalabels` 라는 추가 플러그인을 설치해야 합니다.
+```bash
+npm i chart.js react-chartjs-2 @types/chart.js chartjs-plugin-datalabels
+```
+
+> react-chartjs-2 링크: https://react-chartjs-2-two.vercel.app/
+chartjs-plugin-datalabels 링크: https://chartjs-plugin-datalabels.netlify.app/
+
+### 📌 차트 적용
+**1. 초기 세팅**
+`chart.js`에는 `Line`, `Bar`, `Bubble`, `Doughnut` 등 다양한 차트들이 있는데 저는 Doughnut 차트를 사용하려고 합니다. (Doughnut 차트가 가장 예뻐 보이네요)
+`react-chartjs-2` 라이브러리에서 Doughnut 컴포넌트를 import하고, 추가로 설치한 chartjs-plugin-datalabels 플러그인을 사용하려고 ChartDataLabels도 함께 가져왔습니다. 이 플러그인을 적용하기 위해, ChartJS.register() 함수로 등록했고 추가로 필요한 ArcElement, Tooltip, Legend, Title 모듈 또한 등록했습니다. 등록하지 않으면 차트에 제대로 반영되지 않습니다.
+```tsx
+import { Doughnut } from 'react-chartjs-2';
+import ChartDataLabels from "chartjs-plugin-datalabels";
+import {
+  Chart as ChartJS,
+  Title,
+  ArcElement,
+  Tooltip,
+  Legend,
+  ChartOptions,
+  InteractionItem,
+} from 'chart.js';
+
+ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels, Title);
+
+export const options = {
+  plugins: [ChartDataLabels],
+};
+
+// ...
+export const DoughnutChart = () => {
+  return <Doughnut options={options} data={data} />;
+};
+```
+
+**2. 데이터 적용 및 datalabels 설정**
+
+**데이터 적용**
+chartData는 차트에 필요한 데이터를 구성해 전달하는 객체입니다. 달력의 소비 카테고리가 총 17가지여서, 각각의 카테고리에 대응하는 backgroundColor와 borderColor 배열을 17개로 만들어 설정했습니다. data는 서버에서 받아온 소비 데이터를 기반으로 설정되어 있으며, 각 카테고리별 소비 금액을 차트에 표시하는 역할을 합니다.
+```tsx
+export const BACKGROUND_COLORS = [
+  'rgba(92, 160, 143, 0.2)',
+  'rgba(255, 99, 132, 0.2)',
+  'rgba(54, 162, 235, 0.2)',
+  ...
+];
+
+export const BORDER_COLORS = [
+  'rgba(92, 160, 143, 1)',
+  'rgba(255, 99, 132, 1)',
+  'rgba(54, 162, 235, 1)',
+  ...
+];
+
+  const chartData = {
+    labels,
+    datasets: [
+      {
+        label: '금액', // 데이터셋의 이름으로, 차트의 범례에 표시됨
+        data, // spendingMoneys
+        backgroundColor: BACKGROUND_COLORS,
+        borderColor: BORDER_COLORS,
+        borderWidth: 1,
+        datalabels: {
+          display: true,
+        },
+      },
+    ],
+  };
+
+ const options: ChartOptions<'doughnut'> = {
+    plugins: {
+      datalabels: {
+        color: 'black',
+        display: true,
+        font: {
+          size: 12,
+        },
+        formatter: (value: number, context) => {
+          const label = context.chart.data.labels?.[context.dataIndex] || '';
+          const total = spendingMoneysQueryData?.total as number;
+          return `${label}\n${makePercentage(value, total)}`;
+        },
+        textAlign: 'center',
+      },
+      ...
+  };
+
+ return (
+    <S.Container {...pageTransition}>
+     		...
+              <Doughnut
+                ref={chartRef}
+                options={options}
+                data={chartData}
+              />
+     </S.Container>
+  );
+ }
+```
+
+**datalabels 설정**
+이제 차트의 datalabels에 대한 속성을 추가해 줍니다. 각 항목에 대한 데이터는 formatter 함수를 통해 현재 data에 해당하는 value 값과 그 data의 labels의 정보를 받아올 수 있는 context 객체를 매개변수로 받아올 수 있습니다. context.dataIndex를 통해 index를 받아와서 해당 항목의 label을 가져올 수 있습니다. 그리고 value와 total을 통해 퍼센트를 계산한 후 해당하는 항목의 label과 소비 비율이 나오게끔 구현하였습니다.
+
+```tsx
+const makePercentage = (value: number, total: number) => {
+  return `${((value / total) * 100).toFixed(1)}%`;
+};
+
+
+ const options: ChartOptions<'doughnut'> = {
+    plugins: {
+      datalabels: {
+        color: 'black',
+        display: true,
+        font: {
+          size: 12,
+        },
+        formatter: (value: number, context) => {
+          const label = context.chart.data.labels?.[context.dataIndex] || '';
+          const total = spendingMoneysQueryData?.total as number;
+          return `${label}\n${makePercentage(value, total)}`;
+        },
+        textAlign: 'center',
+      },
+      ...
+  };
+ return (
+    <S.Container {...pageTransition}>
+     		...
+              <Doughnut
+                ref={chartRef}
+                options={options}
+                data={chartData}
+              />
+     </S.Container>
+  );
+ }
+```
+### 📌 결과
+> 최종 완성 화면 입니다😊  
+![](https://velog.velcdn.com/images/css0325/post/fc614f19-45a6-49db-8ce2-8b2a27c9caf7/image.png)
+
+
+
+성공적으로 차트를 도입하여 소비 지출을 시각적으로 확인하기 더욱 쉬워졌습니다!🙌
+공식문서가 잘 되어있어서 차트를 적용하는데 어렵지 않았습니다. 앞으로 차트를 도입할 경우가 있을때 chart.js를 잘 활용할 것 같습니다.
+
