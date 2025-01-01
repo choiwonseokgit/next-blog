@@ -1,5 +1,5 @@
 import PostListPage from "@/components/post-list-page";
-import { blogTitle } from "@/config/const";
+import { baseDomain, blogThumbnailURL, blogTitle } from "@/config/const";
 import { getCategoryList, makeCategoryName } from "@/lib/post";
 import { Metadata } from "next";
 
@@ -25,18 +25,18 @@ export async function generateMetadata({
 }: Props): Promise<Metadata> {
   const cg = makeCategoryName(category);
   const title = `${cg} | ${blogTitle}`;
-  // const url = `${baseDomain}/${category}`;
+  const url = `${baseDomain}/${category}`;
 
   return {
     title,
     openGraph: {
       title,
-      // url,
-      // images: [blogThumbnailURL],
+      url,
+      images: [blogThumbnailURL],
     },
     twitter: {
       title,
-      // images: [blogThumbnailURL],
+      images: [blogThumbnailURL],
     },
   };
 }

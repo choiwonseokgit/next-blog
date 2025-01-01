@@ -1,5 +1,6 @@
 import PostDetailBody from "@/components/post-detail-body";
 import PostDetailHeader from "@/components/post-detail-header";
+import { baseDomain } from "@/config/const";
 import { getAllPostPaths, getPostDetail, parsePostAbstract } from "@/lib/post";
 import { Metadata } from "next";
 
@@ -22,7 +23,7 @@ export async function generateMetadata({
   const postDetail = await getPostDetail(category, slug);
 
   const title = `${postDetail.title} | CWS BLOG`;
-  // const imageURL = `${baseDomain}${post.thumbnail}`;
+  const imageURL = `${baseDomain}${postDetail.thumbnail}`;
 
   return {
     title,
@@ -33,21 +34,19 @@ export async function generateMetadata({
       description: postDetail.desc,
       type: "article",
       publishedTime: postDetail.date.toISOString(),
-      // url: `${baseDomain}${post.url}`,
-      // images: [imageURL],
+      url: `${baseDomain}${postDetail.url}`,
+      images: [imageURL],
     },
     twitter: {
       title,
       description: postDetail.desc,
-      // images: [imageURL],
+      images: [imageURL],
     },
   };
 }
 
 const PostDetailPage = async ({ params: { category, slug } }: Props) => {
-  // console.log(category, slug);
   const postDetail = await getPostDetail(category, slug);
-  // console.log(postDetail);
 
   return (
     <div className="prose dark:prose-invert mx-auto px-5 max-w-[750px]">
