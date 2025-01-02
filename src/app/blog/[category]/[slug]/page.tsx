@@ -49,9 +49,9 @@ const PostDetailPage = async ({ params: { category, slug } }: Props) => {
   const postDetail = await getPostDetail(category, slug);
 
   return (
-    <div className="prose dark:prose-invert mx-auto px-5 max-w-[750px]">
+    <div className="prose dark:prose-invert mx-auto px-5 max-w-[750px] w-full sm:px-6">
       <PostDetailHeader postDetail={postDetail} />
-      <article>
+      <article className="relative">
         <PostDetailBody postDetail={postDetail} />
       </article>
     </div>
