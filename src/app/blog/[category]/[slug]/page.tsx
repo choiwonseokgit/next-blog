@@ -1,3 +1,4 @@
+import Giscus from "@/components/giscus";
 import PostDetailBody from "@/components/post-detail-body";
 import PostDetailHeader from "@/components/post-detail-header";
 import { baseDomain } from "@/config/const";
@@ -54,6 +55,8 @@ const PostDetailPage = async ({ params: { category, slug } }: Props) => {
       <article className="relative">
         <PostDetailBody postDetail={postDetail} />
       </article>
+      <hr />
+      <Giscus />
     </div>
   );
 };
