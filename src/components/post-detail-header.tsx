@@ -1,3 +1,4 @@
+import { CATEGORY_COLORS } from "@/const/category-color";
 import { Post } from "@/types/post";
 import Link from "next/link";
 
@@ -12,7 +13,7 @@ const PostDetailHeader = ({ postDetail }: PostDetailHeaderProps) => {
       <div className="text-base flex items-center">
         <Link
           href={`/blog/${postDetail.category}`}
-          className="font-semibold text-sky-600 no-underline underline-offset-4 hover:underline"
+          className={`font-semibold ${CATEGORY_COLORS[postDetail.category]} no-underline underline-offset-4 hover:underline`}
         >
           {postDetail.categoryName}
         </Link>

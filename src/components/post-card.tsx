@@ -9,6 +9,7 @@ import {
 import { Post } from "@/types/post";
 import Link from "next/link";
 import Image from "next/image";
+import { CATEGORY_COLORS } from "@/const/category-color";
 
 interface PostCardProps {
   post: Post;
@@ -29,7 +30,11 @@ function PostCard({ post }: PostCardProps) {
           </div>
           <CardHeader className="pb-2">
             <div className="flex items-center">
-              <div className="font-semibold text-xs text-sky-600 ">
+              <div
+                className={`font-semibold text-xs ${
+                  CATEGORY_COLORS[post.category]
+                }`}
+              >
                 {post.categoryName}
               </div>
               <div className="inline-block h-[10px] w-[1px] bg-gray-500 mx-2 opacity-20" />
