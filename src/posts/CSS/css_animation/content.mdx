@@ -1,0 +1,348 @@
+---
+title: CSS 애니메이션
+date: 2025-01-09
+desc: CSS 애니메이션에 대한 개념 정리
+thumbnail: /posts/CSS/css_animation/css_animation_gif.gif
+---
+
+![](/posts/CSS/css_animation/css_animation_gif.gif)
+
+## 📌 애니메이션에 쓰이는 CSS 선택자
+- `:hover` - 마우스 커서가 위로 이동했을때 스타일 적용. 주로 버튼이나 링크에 많이 쓰임.
+- `:active` - 마우스를 클릭하고 있는 동안 스타일 적용. 버튼을 클릭할때 눌리는 느낌이나 색상이 바뀌는 효과를 줄 수 있음.
+- `:focus` - 요소가 마우스 클릭이나 키보드 탭 키를 눌러 포커스를 받았을때 스타일 적용. 주로 텍스트 입력란에 사용되며, 포커스 받았을때 강조 가능.
+
+---
+## 📌 CSS Transition
+> CSS Transition은 요소의 속성 값이 변할때, 설정한 시간 동안 부드럽게 변화시키기 위해 사용됩니다.
+
+### CSS Transition 기본 속성
+- `transition-property`: 변화할 속성 값 지정. 특정 속성 값(width, height, color, opacity 등)만 지정하거나 모든 속성(all)을 지정 할 수 있음. 속성이 여러개인 경우 쉼표로 구분함.
+```css
+transition-property: width, height, color;
+```
+- `transition-duration`: 속성 값의 변화가 진행되는 시간 지정. 초(s)나 밀리초(ms)로 지정. 변화하는 속성 값이 여러개인 경우 쉼표로 구분.
+```css
+transition-duration: 0.5s, 1s, 1.5s;
+```
+- `transition`: 위의 두개를 짧게 줄여서 사용 가능. 실제로는 이것을 대부분 사용.
+```css
+transition-duration: width 0.5s, height 1s, color 1.5s;
+```
+<iframe
+  height="300"
+  style={{ width: "100%" }}
+  scrolling="no"
+  title="transition"
+  src="https://codepen.io/wdaupczb-the-builder/embed/NPKyxqV?default-tab=css%2Cresult"
+  frameBorder="no"
+  allowTransparency="true"
+  allowFullScreen="true"
+></iframe>
+
+### transition-timing-function
+
+`transition-timing-function` 속성을 이용하면 시간에 따른 Transition의 속도 변화를 지정할 수 있음. 베지에 곡선을 사용하여 속도를 조절함.
+
+> **베지에 곡선**
+베지에 곡선은 프랑스 엔지니어 피에르 베지에가 자동차 설계에 활용한 수학 공식을 기반으로 하고 있어요. 피에르 베지에의 이름을 따서 "베지에 곡선"이라고 불리게 되었죠. 참고로 피에르가 곡선을 고안한 건 아니고, 이 곡선을 활용하기 위한 아이디어들을 만들고 특허를 내는 등 여러 활동을 했기 때문에 베지에의 이름이 붙었다고 해요.
+이 곡선은 몇 개의 점으로 특정할 수 있어서, 오늘날 대부분의 컴퓨터 설계(CAD)나 벡터 그래픽 프로그램에 활용되고 있답니다. Transition 타이밍 함수에서는 네 개의 점을 사용하는 3차 베지에 곡선이 사용됩니다.
+
+
+- `ease`: 기본값으로 느리게 시작해서 점점 빨라져싿가 다시 느려지는 형태.
+- `linear`: 처음부터 끝가지 같은 속도로 진행.
+- `ease-in`: 느리게 시작했다가 속도 증가.
+- `ease-out`: 빠르게 시작했다가 점점 느려짐.
+- `ease-in-out`: `ease-in`과 `ease-out`을 합친 것으로, 느리게 시작해서 빨라졌다가 다시 느려짐.
+- `cubic-bezier(p1,p2,p3,p4)`: 타이밍 곡선을 직접 정의할 수 있음.
+
+<iframe
+  height="300"
+  style={{ width: "100%" }}
+  scrolling="no"
+  title="transition"
+  src="https://codepen.io/wdaupczb-the-builder/embed/ByBYjYX?default-tab=css%2Cresult"
+  frameBorder="no"
+  allowTransparency="true"
+  allowFullScreen="true"
+></iframe>
+
+### transition-delay
+
+`transition-delay` 속성을 이용하면 Transition을 일정 시간 동안 지연시킬 수 있음.
+- 쉼표로 여러 속성에 각기 다른 지연 가능.
+- 여러 개의 요소에 다른 지연시간을 설정하면 독특한 효과를 만들 수 있음.
+
+<iframe
+  height="300"
+  style={{ width: "100%" }}
+  scrolling="no"
+  title="transition"
+  src="https://codepen.io/wdaupczb-the-builder/embed/bNbLEOd?default-tab=css%2Cresult"
+  frameBorder="no"
+  allowTransparency="true"
+  allowFullScreen="true"
+></iframe>
+
+### transition 속성의 축약형 사용
+위의 Transition의 여러 가지 속성들을 한번에 축약형으로 표현이 가능. 주로 이것으로 활용.
+```css
+transition-property: width;
+transition-duration: 2s;
+transition-timing-function: linear;
+transition-delay: 1s;
+```
+이것을 축약형으로 이렇게 사용.
+```css
+transition: width 2s linear 1s;
+```
+
+이때 다른 속성은 상관 없지만 시간에 대한 속성(`transition-duration`과 `transition-delay`)의 경우 앞의 나오는 것이 `transition-duration` 이고 뒤에 것이 `transition-delay`라는 점을 기억해야 함.
+
+---
+## 📌 CSS Transforms
+> CSS Transfrom 속성을 사용하면 주변 요소들에 영향을 주지 않고 특정 요소의 크기, 형태, 위치 등을 변경할 수 있습니다.
+
+transform 속성은 적용하고 싶은 요소에 `transform: transform-function;` 을 적어서 사용 가능.
+
+### Transform 함수 종류
+- `translate(x, y), tralateX(x), translateY(y)`: 요소를 x축, y축으로 주어진 거리만큼 이동 시킴. 예를 들어, `translate(10px, 5px)`는 요소를 오른쪽으로 10px, 아래로 5px 이동함
+
+- `scale(x, y), scaleX(x), scaleY(y)`: 요소를 설정한 크기 만큼 확대하거나 축소함. `scale(2, 0.5)`는 요소를 가로로 2배, 세로로 0.5배 크기로 만듦.
+
+- `skew(x-angle, y-angle), skewX(x-angle), skewY(y-angle)`: 요소를 설정한 각도만큼 x축과 y축으로 기울임. skewX(15deg)는 x축으로 15도 기울이고, `skewY(15deg)`는 y축 방향으로 15도 기울임.
+
+- `rotate(angle)`: 요소를 설정한 각도만큼 회전시킴. `rotate(30deg)`는 요소를 30도 회전시킴. 각도 단위로는 deg, rad, grad, turn이 사용됨.
+
+### 여러 함수 함께 사용 가능
+여러 transform function을 함께 사용할 수 있음
+```css
+transform: translate(20px) scale(2) rotate(15deg);
+```
+<iframe
+  height="300"
+  style={{ width: "100%" }}
+  scrolling="no"
+  title="transition"
+  src="https://codepen.io/wdaupczb-the-builder/embed/emOVZbP?default-tab=css%2Cresult"
+  frameBorder="no"
+  allowTransparency="true"
+  allowFullScreen="true"
+></iframe>
+
+### 3D Transforms
+> CSS Transforms에서는 다양한 3D 변형 함수도 사용 가능합니다.
+
+- `rotateX(angle), rotateY(angle), rotateZ(angle)`: 요소를 설정한 축(x, y, z) 기준으로 주어진 각도만큼 회전시킴. 기본 `rotate(angle)`와 동일한 효과.
+
+- `translateZ(z)`: 요소를 z축으로 설정한 값만큼 이동.
+
+- `translate3d(x, y, z), rotate3d(x, y, z, angle), scale3d(x, y, z)`: x, y, z 세 축을 기준으로 요소를 한번에 이동, 회전, 확대 및 축소 설정 하게 해줌. `rotate3d()` 함수에서는 x, y, z 축은 회전축을 의미하는데 일반적으로 -1 ~ 1 사이의 값을 사용. 음수값은 축의 방향을 반대 방향으로 돌림.
+
+- `perspective`: `perspective` 속성이나 `perspective(value)` 함수를 이용하면 깊이감과 거리감을 만들어서 요소를 입체적으로 보이게 할 수 있음. 값이 크면 요소가 더 멀리 떨어진 것처럼 보여 요소가 덜 왜곡되며 더 평평해 보이고, 값이 작으면 요소가 가까이 있는 것처럼 보여 요소가 더 왜곡되고 극적인 효과가 나게 됨.
+    - `perspective`: 요소의 부모에 적용해야함. 부모 요소에 적용된 `perspective`는 자식 요소에 깊이감을 더해줌.
+    - `perspective(value)`: 변형하려는 요소에 직접 적용해야함. 
+
+<iframe
+  height="300"
+  style={{ width: "100%" }}
+  scrolling="no"
+  title="transition"
+  src="https://codepen.io/wdaupczb-the-builder/embed/yyBvJVG?default-tab=css%2Cresult"
+  frameBorder="no"
+  allowTransparency="true"
+  allowFullScreen="true"
+></iframe>
+
+### transform-origin
+`transform-origin`을 사용하면 기준점을 변경할 수 있음.
+```css
+transform-origin: x y z;
+```
+기준점은 px, %단위로 설정하거나 `left, center, right (x축)`, `top, center, bottom (y축)` 으로도 설정 가능.
+
+<iframe
+  height="300"
+  style={{ width: "100%" }}
+  scrolling="no"
+  title="transition"
+  src="https://codepen.io/wdaupczb-the-builder/embed/yyBvJXw?default-tab=css%2Cresult"
+  frameBorder="no"
+  allowTransparency="true"
+  allowFullScreen="true"
+></iframe>
+
+### Transform과 Transition 함께 사용하기
+`transform`에 `transition`효과를 더하기 위해서는 `transition`에 `transform`을 추가해주면 됩니다.
+```css
+.box {
+  width: 100px;
+  height: 100px;
+  transition: transform 1s;
+}
+
+.box:hover {
+  transform: scale(1.5);
+}
+```
+<iframe
+  height="300"
+  style={{ width: "100%" }}
+  scrolling="no"
+  title="transition"
+  src="https://codepen.io/wdaupczb-the-builder/embed/xbKYOpZ?default-tab=css%2Cresult"
+  frameBorder="no"
+  allowTransparency="true"
+  allowFullScreen="true"
+></iframe>
+
+
+---
+## 📌 CSS Animations, Keyframes
+
+> CSS Animation을 활용하면 CSS Transition 보다 훨씬 복잡하고 다양한 애니메이션 효과를 구현할 수 있음. `@keyframes`라는 문법을 이용해 animation을 적용할 수 있음.
+
+### keyframes
+키프레임이란 CSS 스타일의 중간 지점을 의미함. 예를 들어, 어떤 시점에서의 요소가 어떤 스타일을 가질지 단계별로 설정할 수 있음.
+
+### keyframes 문법
+- 처음 과 최종 스타일을 정의하는 방법
+```css
+@keyframes animation-name {
+  from {
+    /* 처음 스타일 */
+  }
+  to {
+    /* 최종 스타일 */
+  }
+}
+```
+
+- 좀 더 세분화해서 정의하는 법
+```css
+@keyframes animation-name {
+  0% {
+    /* 처음 스타일 */
+  }
+  50% {
+    /* 중간 스타일 */
+  }
+  100% {
+    /* 최종 스타일 */
+  }
+}
+```
+
+### Animation 적용하기
+`keyframes`로 정의한 Animation 이름을 `animation-name`과 `animation-duration`으로 애니메이션 이름과 실행할 시간을 지정해주면 됨.
+- `animation-name`: `keyframes`로 정의한 애니메이션 이름 설정
+- `animation-duration`: 애니메이션 실행 시간 설정
+```css
+@keyframes animation-name {
+  from {
+    background-color: red
+  }
+  to {
+    background-color: blue
+  }
+}
+
+.box {
+  animation-name: change-color;
+  animation-duration: 3s;
+}
+```
+- `animation`: `animation`을 사용해서 한 줄로 축약해서 사용할 수도 있음
+```css
+@keyframes animation-name {
+  from {
+    background-color: red
+  }
+  to {
+    background-color: blue
+  }
+}
+
+.box {
+  animation: change-color 3s;
+}
+```
+
+<iframe
+  height="300"
+  style={{ width: "100%" }}
+  scrolling="no"
+  title="transition"
+  src="https://codepen.io/wdaupczb-the-builder/embed/gbYvXKo?default-tab=css%2Cresult"
+  frameBorder="no"
+  allowTransparency="true"
+  allowFullScreen="true"
+></iframe>
+
+### CSS Animations의 다양한 속성들
+
+- `animation-delay`: 애니메이션이 시작되기 전 기다리는 시간 설정
+- `animation-iteration-count`: 애니메이션이 얼마나 반복될지 설정. 숫자를 통해 횟수를 설정하거나 `infinite`속성을 활용하여 무한 반복을 설정할 수 있음.
+- `animation-timing-function`: 위의 `transition-timing-function`과 동일하게 설정 가능. `ease`, `linear`, `ease-in-out` 등의 값들을 사용.
+- `animation-direction`: 애니메이션의 재생 방향을 정의. 기본값 `normal`은 순방향, `reverse`는 역방향, `alternate`는 순방향으로 시작하여 역방향과 순방향을 번갈아 재생.
+
+<iframe
+  height="300"
+  style={{ width: "100%" }}
+  scrolling="no"
+  title="transition"
+  src="https://codepen.io/wdaupczb-the-builder/embed/KwPQZEM?default-tab=css%2Cresult"
+  frameBorder="no"
+  allowTransparency="true"
+  allowFullScreen="true"
+></iframe>
+
+- `animation-fill-mode`: 애니메이션이 시작되기 전(딜레이 있을때 딜레이 시간을 뜻함)이나 끝난 후 어떤 스타일이 적용될지를 설정함.
+  - `none`: 기본값, 애니메이션에 의해 별도로 스타일이 정해지지 않음. 애니메이션이 끝난 후 원래 상태로 복귀.
+  - `forwards`: 애니메이션이 끝난 후, 마지막에 적용된 애니메이션 스타일이 유지.
+  - `backwards`: 애니메이션이 시작하기 전(딜레이 시간), 애니메이션 처음 시작 스타일로 유지.
+  - `both`: `forwards`와 `backwards`가 같이 적용.
+  
+delay와 함께 적용한 예시를 보겠습니다.
+
+<iframe
+  height="300"
+  style={{ width: "100%" }}
+  scrolling="no"
+  title="transition"
+  src="https://codepen.io/wdaupczb-the-builder/embed/raBJJNY?default-tab=css%2Cresult"
+  frameBorder="no"
+  allowTransparency="true"
+  allowFullScreen="true"
+></iframe>
+
+- `forwards with delay`: 애니메이션 시작 전에 기존 색 유지. 끝난 후에는 마지막 스타일 파란색 유지
+- `backwards with delay`: 애니메이션 시작 전 노란색 유지, 끝난 후 처음 스타일인 하늘색으로 복귀
+- `both with delay`: 애니메이션 시작 전 노란색 유지(backwards) 끝난 후는 파란색으로 계속 유지(forwards)
+
+### animation 축약형
+> 위의 다양한 animation 속성들을 animation 속성 안에 축약형으로 사용 가능.
+```css
+animation: change-color 3s infinite;
+```
+하지만 다양한 속성을 쓸 경우, 풀어서 하나씩 쓰는게 가독성 측면에서 좋을 수 있음. 
+그리고 다른 순서는 상관 없지만 시간과 관련된 속성 두가지를 함께 쓴다면 처음 것이 `animation-duration`이고 다음이 `animation-delay`로 적용된다. 
+
+```css
+animation: change-color 3s infinite 1s linear reverse forwards;
+```
+
+<iframe
+  height="300"
+  style={{ width: "100%" }}
+  scrolling="no"
+  title="transition"
+  src="https://codepen.io/wdaupczb-the-builder/embed/OPLQQjN?default-tab=css%2Cresult"
+  frameBorder="no"
+  allowTransparency="true"
+  allowFullScreen="true"
+></iframe>
+
+## 📌 참고
+- https://www.codeit.kr/
+- https://developer.mozilla.org/ko/docs/Web/CSS

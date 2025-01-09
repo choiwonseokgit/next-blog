@@ -12,7 +12,6 @@ function CategoryList({
   categoriesCnt,
   selectedCategory = "All",
 }: CategoryListProps) {
-  //console.log(selectedCategory);
   return (
     <ul className="flex gap-4 py-6">
       <CategoryItem
