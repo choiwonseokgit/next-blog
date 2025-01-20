@@ -211,7 +211,7 @@ Allow: /
 **📚 필수 하위 역할을 추가하는 이유**
 - ARIA 역할을 지정할 때, 특정 역할은 반드시 하위 요소들과 함께 사용되어야 제대로 된 접근성을 제공합니다. 예를 들어, role="row"는 반드시 role="cell" 또는 role="columnheader"와 같은 하위 요소들과 함께 사용해야 합니다. 그렇지 않으면 스크린 리더가 해당 요소의 의미를 정확하게 파악할 수 없기 때문에 접근성이 떨어지게 됩니다.
 
-```tsx {2}
+```tsx {3}
 function MyMonthHeader({ label }: HeaderProps) {
   return (
     <S.Container $label={label} role="cell"> //role="cell"추가
